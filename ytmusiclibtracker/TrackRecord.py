@@ -16,7 +16,7 @@ class TrackRecord:
         self.playlist_name = song_row[5].strip()
         self.playlist_id = song_row[6].strip()
         self.is_available = song_row[7].strip() if song_row[7].strip() != '' else '1'
-        self.full_name = get_comparable_text(self.artists + ' - ' + self.title)
+        self.full_name = get_comparable_text(f'{self.artists} - {self.title}')
 
     def __eq__(self, other):
         if not isinstance(other, TrackRecord):
@@ -60,14 +60,10 @@ class TrackRecord:
         return False
 
     def is_equal_by_full_name(self, other):
-        if self.full_name == other.full_name:
-            return True
-        return False
+        return self.full_name == other.full_name
 
     def is_equal_by_title(self, other):
-        if get_comparable_text(self.title) == get_comparable_text(other.title):
-            return True
-        return False
+        return get_comparable_text(self.title) == get_comparable_text(other.title)
 
     def is_equal_by_playlist(self, other):
         if self.is_available != other.is_available:
@@ -82,9 +78,7 @@ class TrackRecord:
         return False
 
     def is_equal_by_album(self, other):
-        if get_comparable_text(self.album) == get_comparable_text(other.album):
-            return True
-        return False
+        return get_comparable_text(self.album) == get_comparable_text(other.album)
 
     def is_equal_ignoring_availability(self, other):
         self_hash = hash((self.full_name, get_comparable_text(self.playlist_name)))
@@ -92,18 +86,14 @@ class TrackRecord:
         return self_hash == other_hash
 
     def is_equal_by_liked_playlist(self, other):
-        if self.is_equal_by_full_name(other) and \
+        return bool(self.is_equal_by_full_name(other) and \
                 self.playlist_name in [self.YOUR_LIKES, self.THUMBS_UP] and \
-                other.playlist_name in [self.YOUR_LIKES, self.THUMBS_UP]:
-            return True
-        return False
+                other.playlist_name in [self.YOUR_LIKES, self.THUMBS_UP])
 
     def is_equal_by_uploaded_library_status(self, other):
-        if self.is_equal_by_full_name(other) and \
+        return bool(self.is_equal_by_full_name(other) and \
                 self.playlist_name in [self.LIBRARY, self.UPLOADED] and \
-                other.playlist_name in [self.LIBRARY, self.UPLOADED]:
-            return True
-        return False
+                other.playlist_name in [self.LIBRARY, self.UPLOADED])
 
     def serialize_to_csv_row(self):
         return [self.artists, self.title, self.album, self.video_id, self.set_video_id,

@@ -29,7 +29,7 @@ def main():
     end = timer()
     log('END')
     log('-----------------------------------------------------------------------', True)
-    log('All tasks has been completed. Time: ' + str(end - start) + ' sec.', True)
+    log(f'All tasks has been completed. Time: {str(end - start)} sec.', True)
     input("Press Enter to continue...")
     sys.exit()
 

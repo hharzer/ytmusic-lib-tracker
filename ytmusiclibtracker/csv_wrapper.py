@@ -5,9 +5,15 @@ from ytmusiclibtracker.common import *
 
 
 def create_csv_with_list_of_dict(output_dir, filename, headers, list_of_rows, with_timestamp):
-    full_name = os.path.join(output_dir,
-                             filename + '_' + current_date_time_to_file_name_string() + '.csv') if with_timestamp else os.path.join(
-        output_dir, filename + '.csv')
+    full_name = (
+        os.path.join(
+            output_dir,
+            f'{filename}_{current_date_time_to_file_name_string()}.csv',
+        )
+        if with_timestamp
+        else os.path.join(output_dir, f'{filename}.csv')
+    )
+
 
     with io.open(full_name, 'w', encoding="utf-8") as csv_file:
         file_writer = csv.writer(csv_file, delimiter='|', quotechar='`', quoting=csv.QUOTE_MINIMAL, lineterminator='\n')
@@ -27,8 +33,7 @@ def get_list_of_rows_from_file(filename):
 
         file_reader = csv.reader(csv_file, dialect)
 
-        for row in file_reader:
-            list_of_rows.append(row)
+        list_of_rows.extend(iter(file_reader))
     return list_of_rows
 
 
@@ -53,5 +58,4 @@ def get_ytmlt_export_headers():
 
 def convert_gpm_to_ytmlt_row(gpm_rom):
     expected_order = [1, 0, 2, -1, -1, 12, -1, -1]
-    ytmlt_row = [gpm_rom[i] if i >= 0 else '' for i in expected_order]
-    return ytmlt_row
+    return [gpm_rom[i] if i >= 0 else '' for i in expected_order]

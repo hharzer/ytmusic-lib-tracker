@@ -24,43 +24,65 @@ def unavailable_playlist_songs_matcher(track_to_find, buffer):
 
 
 def thumbs_up_your_likes_matcher(track_to_find, buffer):
-    matches = []
-    for track in flatten_list(buffer.values()):
-        if track.is_equal_by_liked_playlist(track_to_find):
-            matches.append(MatchResult(track_to_find, track, 'MODIFIED', '\'Thumbs Up\' playlist is now \'Your Likes\' playlist'))
-    return matches
+    return [
+        MatchResult(
+            track_to_find,
+            track,
+            'MODIFIED',
+            '\'Thumbs Up\' playlist is now \'Your Likes\' playlist',
+        )
+        for track in flatten_list(buffer.values())
+        if track.is_equal_by_liked_playlist(track_to_find)
+    ]
 
 
 def uploaded_to_library_matcher(track_to_find, buffer):
-    matches = []
-    for track in flatten_list(buffer.values()):
-        if track.is_equal_by_uploaded_library_status(track_to_find):
-            matches.append(MatchResult(track_to_find, track, 'UNCHANGED', ''))
-    return matches
+    return [
+        MatchResult(track_to_find, track, 'UNCHANGED', '')
+        for track in flatten_list(buffer.values())
+        if track.is_equal_by_uploaded_library_status(track_to_find)
+    ]
 
 
 def similar_artists_matcher(track_to_find, buffer):
-    matches = []
-    for track in flatten_list(buffer.values()):
-        if track.is_equal_by_title_and_has_added_removed_artists(track_to_find):
-            matches.append(MatchResult(track_to_find, track, 'MODIFIED', 'Artists could have been changed' if track.is_equal_by_album(track_to_find) else 'Artists and album could have been changed'))
-    return matches
+    return [
+        MatchResult(
+            track_to_find,
+            track,
+            'MODIFIED',
+            'Artists could have been changed'
+            if track.is_equal_by_album(track_to_find)
+            else 'Artists and album could have been changed',
+        )
+        for track in flatten_list(buffer.values())
+        if track.is_equal_by_title_and_has_added_removed_artists(track_to_find)
+    ]
 
 
 def same_id_matcher(track_to_find, buffer):
-    matches = []
-    for track in flatten_list(buffer.values()):
-        if track.is_equal_by_id(track_to_find):
-            matches.append(MatchResult(track_to_find, track, 'MODIFIED', 'Track with same id has been found. Metadata could have been changed'))
-    return matches
+    return [
+        MatchResult(
+            track_to_find,
+            track,
+            'MODIFIED',
+            'Track with same id has been found. Metadata could have been changed',
+        )
+        for track in flatten_list(buffer.values())
+        if track.is_equal_by_id(track_to_find)
+    ]
 
 
 def similar_metadata_matcher(track_to_find, buffer):
-    matches = []
-    for track in flatten_list(buffer.values()):
-        if track.is_similar_by_artists_and_titles(track_to_find):
-            matches.append(MatchResult(track_to_find, track, 'MODIFIED', 'Similar song has been found. Verify it manually if it\'s the same track as before'))
-    return matches
+    return [
+        MatchResult(
+            track_to_find,
+            track,
+            'MODIFIED',
+            'Similar song has been found. Verify it manually if it\'s the same track as before',
+        )
+        for track in flatten_list(buffer.values())
+        if track.is_similar_by_artists_and_titles(track_to_find)
+    ]
 
 
 def create_match_results_for_unmatched_tracks_from_previous_file(unmatched_tracks):
