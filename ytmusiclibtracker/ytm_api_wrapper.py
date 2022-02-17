@@ -11,8 +11,7 @@ def open_api():
         headers_raw = []
         log('Please paste here the request headers from your browser and then press \'Enter\' twice to continue:')
         while True:
-            line = input()
-            if line:
+            if line := input():
                 headers_raw.append(line+'\n')
             else:
                 break
@@ -26,17 +25,17 @@ def get_all_songs_from_my_library(api):
     log('Fetching tracks from library, it may take a while...')
     library_songs = api.get_library_songs(100000, True)
 
-    log('Fetched ' + str(len(library_songs)) + ' tracks from Library', True)
+    log(f'Fetched {len(library_songs)} tracks from Library', True)
     return library_songs
 
 
 # returns [{id: playlistId, name: playlistName},...]
 def get_my_playlist_ids_and_names(api):
     my_playlists = api.get_library_playlists(1000)
-    playlist_ids = []
-    for playlist in my_playlists:
-        playlist_ids.append({'id': playlist['playlistId'], 'name': playlist['title']})
-    return playlist_ids
+    return [
+        {'id': playlist['playlistId'], 'name': playlist['title']}
+        for playlist in my_playlists
+    ]
 
 
 def get_songs_from_playlist(api, playlist_id):
@@ -54,7 +53,7 @@ def get_songs_from_playlist(api, playlist_id):
 def get_all_uploaded_songs(api):
     log('Fetching uploaded tracks, it may take a while...')
     uploaded_songs = api.get_library_upload_songs(100000)
-    log('Fetched ' + str(len(uploaded_songs)) + ' uploaded tracks', True)
+    log(f'Fetched {len(uploaded_songs)} uploaded tracks', True)
 
     return uploaded_songs
 
@@ -79,8 +78,8 @@ def song_string_representation(song):
     title = song['title']
 
     if artists:
-        return artists + ' - ' + title
-    return ' - ' + title
+        return f'{artists} - {title}'
+    return f' - {title}'
 
 
 def song_artists_string_representation(song):
@@ -96,9 +95,8 @@ def song_artists_string_representation(song):
 
 
 def song_album_string_representation(album):
-    if album:
-        if "name" in album:
-            return album["name"]
+    if album and "name" in album:
+        return album["name"]
     return None
 
 
@@ -107,9 +105,8 @@ def set_video_id_string_representation(song):
 
 
 def song_availability_status(song):
-    if 'isAvailable' in song:
-        if not song['isAvailable']:
-            return 0
+    if 'isAvailable' in song and not song['isAvailable']:
+        return 0
     return '1'
 
 

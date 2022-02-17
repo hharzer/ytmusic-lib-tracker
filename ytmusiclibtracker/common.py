@@ -83,7 +83,7 @@ def group_list_by_function(seq, function):
 
 
 def current_date_time_to_file_name_string():
-    return datetime.today().strftime('%Y_%m_%d_%H_%M_%S')
+    return datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
 
 
 def get_comparable_text(text, omit_brackets=False):
@@ -113,7 +113,7 @@ def are_two_texts_similar(t1, t2, expected_ratio):
 
 
 def get_similarity_index_based_on_length(t1, t2):
-    length = len(t1) if len(t1) > len(t2) else len(t2)
+    length = max(len(t1), len(t2))
     if length < 6:
         return 0.79
     if length > 18:

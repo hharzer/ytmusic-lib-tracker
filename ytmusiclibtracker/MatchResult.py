@@ -7,7 +7,7 @@ class MatchResult:
         self.status_details = status_details
 
     def serialize_to_csv_row(self):
-        csv_row = [
+        return [
             self.status,
             self.status_details,
             self.track_to_find.artists if self.track_to_find else '',
@@ -25,5 +25,3 @@ class MatchResult:
             self.track_to_find.playlist_id if self.track_to_find else '',
             self.matched_track.playlist_id if self.matched_track else '',
         ]
-
-        return csv_row
